@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gmail Scanner</title>
+</head>
+<body>
+    <h1>Gmail Email Scanner</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="num_emails">Number of emails to scan:</label>
+        <input type="number" name="num_emails" id="num_emails" min="1" required>
+        <button type="submit">Scan</button>
+    </form>
+
+    {% if results %}
+        <h2>Scan Results:</h2>
+        <ul>
+            {% for email in results %}
+                <li>
+                    <strong>Subject:</strong> {{ email.subject }}<br>
+                    <strong>From:</strong> {{ email.sender }}<br>
+                    <strong>Classification:</strong> {{ email.email_score }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

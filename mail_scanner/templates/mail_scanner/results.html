@@ -1,0 +1,159 @@
+<!-- templates/scanner/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scan Results</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: Handwritten -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+<style>
+    .btn-primar {
+        background-color: #75a1dcff;
+        border-color: #75a1dcff;
+        color: white;
+        padding: 0.375rem 1.5rem; /* Smaller padding */
+        font-size: 1rem;       /* Slightly smaller font */
+        white-space: nowrap;      /* Prevent text wrapping */
+    }
+ 
+     body {
+       
+        background: linear-gradient(to bottom, #79ace7ff, #dfe9f5ff);
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        padding: 20px;
+    }
+     .quote{
+           font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #f0f8ff;
+            margin: 0;
+            text-align: center
+
+        }
+           .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;  /* Fixed missing semicolon and changed to 100% */
+        margin-bottom: 3rem;
+    }
+
+    .welcome-heading {
+        font-family: 'Dancing Script', cursive;
+        font-size: 2.5rem;
+        color: #f0f8ff;
+        margin: 0;
+    }
+    
+    /* Modified button styles */
+    .btn-primary {
+        background-color: #75a1dcff;
+        border-color: #75a1dcff;
+        color: white;
+        padding: 0.375rem 1.5rem; /* Smaller padding */
+        font-size: 2rem;       /* Slightly smaller font */
+        white-space: nowrap;      /* Prevent text wrapping */
+    }
+
+    .btn-primary:hover {
+        background-color: #6a96d1;
+        border-color: #6a96d1;
+    }
+
+    .btn-primary:focus,
+    .btn-primary:focus-visible {
+        outline: 3px solid #aac8ff;
+        outline-offset: 2px;
+        background-color: #6a96d1;
+        border-color: #6a96d1;
+    }
+
+    .btn-primary:active {
+        background-color: #5f8bc6;
+        border-color: #5f8bc6;
+    }
+     .disclaimer {
+        margin-top: auto; /* Pushes to bottom in flex column layout */
+        text-align: center;
+        font-size: 0.7rem;
+        color: #345678;
+        padding: 20px 0;
+    }
+
+</style>
+<body>
+     <div class="header-container">
+        <h1 class="welcome-heading"><b>📧Mail Scanner</b></h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'mail_scanner:logout' %}" 
+               class="btn btn-primary rounded-pill"> <!-- Removed btn-lg and w-100 -->
+               <i class="bi bi-box-arrow-right me-2"></i> Logout <!-- Changed to logout icon -->
+            </a>
+        {% else %}
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next=/dashboard/" 
+               class="btn btn-primary rounded-pill"> <!-- Removed btn-lg and w-100 -->
+               <i class="bi bi-google me-2"></i> Login with Google
+            </a>
+        {% endif %}
+    </div>
+<div class="quote"><b>Secure your mailbox </div>
+<div class="container py-5">
+    <h2><i class="bi bi-search"></i>Scan Results</h2>
+
+    <table class="table table-bordered table-striped mt-4">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Subject</th>
+                <th>Sender</th>
+                <th>ML_Scan</th>
+                <th>File check</th>
+                <th>Url check</th>
+                <th>Classification</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for email in results %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ email.subject }}</td>
+                <td>{{ email.sender }}</td>
+                <td>{{ email.ml_scan}}</td>
+                <td>{{ email.file }}</td>
+                <td>{{ email.url }}</td>
+                <td>
+                    {%if email.email_label == "The mail has malicious issues"%}
+                        <span class="badge bg-danger">Spam</span>
+                    {%elif email.email_label == " The mail has suspicious issues"%}
+                        <span class="badge bg-warning">Suspicious</span>
+                    {%else%}
+                        <span class="badge bg-success">Safe</span>
+                    {%endif%}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'mail_scanner:download_pdf' %}" class="btn btn-primar">⬇ Download Results (PDF)</a>
+    <a href="{% url 'mail_scanner:dashboard' %}" class="btn btn-primar">🔙 Back to Dashboard</a>
+   
+<div class="disclaimer">
+    By loging in, you are agreeing to give access to your mailbox and allow parsing of your messages.
+</div>
+   
+   
+</body>
+</html>
