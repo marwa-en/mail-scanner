@@ -61,7 +61,7 @@ venv/Script/Activate.ps1
 ```bash
 pip install -r requirements.txt
 ```
-## 🚀 setup
+##  setup
 ## Configure the .env file:
 ###  Google OAuth 2.0 Setup:
     Create a OAuth 2.0 Client IDs 
@@ -101,7 +101,7 @@ python manage.py migrate
 
 ---
 
-## ▶ Run the Application
+##  Run the Application
 
 Start the Django development server:
 
